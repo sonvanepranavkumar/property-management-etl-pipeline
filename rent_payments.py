@@ -11,7 +11,7 @@ def transform_rent_payments(rent_payments_df):
         .withColumn("PaymentDate", F.expr("try_cast(trim(PaymentDate) AS DATE)"))
         .withColumn("Status", F.initcap(F.trim(F.col("Status"))))
         .withColumn("PropertyId", F.expr("try_cast(trim(PropertyId) AS BIGINT)"))
-        .withColumn("TenantId", F.expr("try_cast(trim(PropertyId) AS BIGINT)"))
+        .withColumn("TenantId", F.expr("try_cast(trim(TenantId) AS BIGINT)"))
     )
 
     print("Rent payments transformation completed!")
