@@ -35,7 +35,7 @@ jobs:
 
       - name: Run tests
         run: |
-          pytest
+          pytest tests/
 
   deploy:
     name: Deploy to Databricks
@@ -52,25 +52,18 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.11"
-
       - name: Install Databricks CLI
-        run: |
-          curl -fsSL https://raw.githubusercontent.com/databricks/setup-cli/main/install.sh | sh
+        uses: databricks/setup-cli@main
 
       - name: Check Databricks connection
         run: databricks current-user me
 
-      - name: Prepare deployment folder
+      - name: Upload notebooks
         run: |
-          mkdir -p deploy
-          cp notebooks/*.py deploy/
-          cp src/*.py deploy/
+          databricks workspace mkdirs "${{ vars.PROPERTY_MANAGEMENT_ETL_WORKSPACE_PATH }}/notebooks"
+          databricks workspace import-dir notebooks "${{ vars.PROPERTY_MANAGEMENT_ETL_WORKSPACE_PATH }}/notebooks" --overwrite
 
-      - name: Upload files to Databricks
+      - name: Upload Python modules
         run: |
-          databricks workspace mkdirs "${{ vars.PROPERTY_MANAGEMENT_ETL_WORKSPACE_PATH }}"
-          databricks workspace import-dir deploy "${{ vars.PROPERTY_MANAGEMENT_ETL_WORKSPACE_PATH }}" --overwrite
+          databricks workspace mkdirs "${{ vars.PROPERTY_MANAGEMENT_ETL_WORKSPACE_PATH }}/src"
+          databricks workspace import-dir src "${{ vars.PROPERTY_MANAGEMENT_ETL_WORKSPACE_PATH }}/src" --overwrite
