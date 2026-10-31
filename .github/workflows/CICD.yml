@@ -47,7 +47,6 @@ jobs:
     env:
       DATABRICKS_HOST: ${{ secrets.PROPERTY_MANAGEMENT_ETL_DATABRICKS_HOST }}
       DATABRICKS_TOKEN: ${{ secrets.PROPERTY_MANAGEMENT_ETL_DATABRICKS_TOKEN }}
-      BUNDLE_VAR_workspace_host: ${{ secrets.PROPERTY_MANAGEMENT_ETL_DATABRICKS_HOST }}
 
     steps:
       - name: Checkout repository
