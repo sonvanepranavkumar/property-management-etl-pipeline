@@ -1,6 +1,7 @@
 from pyspark.sql import SparkSession
 from pyspark.sql import functions as F
-from pyspark.sql.types import LongType, DoubleType, StringType
+from pyspark.sql.types import LongType, DecimalType, StringType
+from decimal import Decimal
 import properties
 
 spark = SparkSession.builder.getOrCreate()
@@ -29,7 +30,7 @@ def test_properties_transform():
     properties_schema = properties_transformed_df.schema
     assert properties_schema["Id"].dataType == LongType(), "Invalid Id data type"
     assert properties_schema["Address"].dataType == StringType(), "Invalid Address data type"
-    assert properties_schema["Rent"].dataType == DoubleType(), "Invalid Rent data type"
+    assert properties_schema["Rent"].dataType == DecimalType(12, 2), "Invalid Rent data type"
     assert properties_schema["Status"].dataType == StringType(), "Invalid Status data type"
     assert properties_schema["LandlordId"].dataType == LongType(), "Invalid LandlordId data type"
 
@@ -39,22 +40,23 @@ def test_properties_transform():
     }
 
     #Test trimming, capitalisation and numeric conversions
-    assert properties_by_id[101] == (101, "25 High Street", 1200.50, "Vacant", 2001), "trimming, capitalisation or numeric conversion failed"
-    assert properties_by_id[102] == (102, "10 London Road", 950.0, "Occupied", 2002), "trimming, capitalisation or numeric conversion failed"
+    assert properties_by_id[101] == (101, "25 High Street", Decimal("1200.50"), "Vacant", 2001), "trimming, capitalisation or numeric conversion failed"
+    assert properties_by_id[102] == (102, "10 London Road", Decimal("950.00"), "Occupied", 2002), "trimming, capitalisation or numeric conversion failed"
 
     #Test invalid numeric values become NULL
-    assert properties_transformed_df.filter(F.col("Address") == "5 Park Lane").first() == (None, "5 Park Lane", None, "Occupied", None), "NULL conversion failed"
+    assert properties_transformed_df.filter(
+        F.col("Address") == "5 Park Lane"
+    ).first() == (None, "5 Park Lane", None, "Occupied", None), "Invalid numeric value conversion failed"
 
     #Test existing NULL values are preserved
     assert properties_by_id[104] == (104, None, None, None, None), "NULL preservation failed"
 
     #Test empty strings remain empty strings
-    assert properties_by_id[105] == (105, "", 1500.0, "", 2005), "empty strings preservation failed"
+    assert properties_by_id[105] == (105, "", Decimal("1500.00"), "", 2005), "empty strings preservation failed"
 
     #Test record count
     assert properties_transformed_df.count() == 5, "record count failed"
 
-    print("All properties transformation tests passed!")
+    print("All properties transformation tests finished!")
 
 test_properties_transform()
-    

@@ -8,7 +8,7 @@ def transform_properties(properties_df):
         properties_df
         .withColumn("Id", F.expr("try_cast(trim(Id) AS BIGINT)"))
         .withColumn("Address", F.trim(F.col("Address")))
-        .withColumn("Rent", F.expr("try_cast(Rent AS DOUBLE)"))
+        .withColumn("Rent", F.expr("try_cast(trim(Rent) AS DECIMAL(12,2))"))
         .withColumn("Status", F.initcap(F.trim(F.col("Status"))))
         .withColumn("LandlordId", F.expr("try_cast(trim(LandlordId) AS BIGINT)"))
     )
