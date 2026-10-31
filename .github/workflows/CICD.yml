@@ -35,7 +35,7 @@ jobs:
 
       - name: Run tests
         run: |
-          pytest tests/
+          PYTHONPATH=src pytest tests/
 
   deploy:
     name: Deploy to Databricks
@@ -47,6 +47,7 @@ jobs:
     env:
       DATABRICKS_HOST: ${{ secrets.PROPERTY_MANAGEMENT_ETL_DATABRICKS_HOST }}
       DATABRICKS_TOKEN: ${{ secrets.PROPERTY_MANAGEMENT_ETL_DATABRICKS_TOKEN }}
+      BUNDLE_VAR_workspace_host: ${{ secrets.PROPERTY_MANAGEMENT_ETL_DATABRICKS_HOST }}
 
     steps:
       - name: Checkout repository
@@ -55,15 +56,8 @@ jobs:
       - name: Install Databricks CLI
         uses: databricks/setup-cli@main
 
-      - name: Check Databricks connection
-        run: databricks current-user me
+      - name: Validate bundle
+        run: databricks bundle validate -t prod
 
-      - name: Upload notebooks
-        run: |
-          databricks workspace mkdirs "${{ vars.PROPERTY_MANAGEMENT_ETL_WORKSPACE_PATH }}/notebooks"
-          databricks workspace import-dir notebooks "${{ vars.PROPERTY_MANAGEMENT_ETL_WORKSPACE_PATH }}/notebooks" --overwrite
-
-      - name: Upload Python modules
-        run: |
-          databricks workspace mkdirs "${{ vars.PROPERTY_MANAGEMENT_ETL_WORKSPACE_PATH }}/src"
-          databricks workspace import-dir src "${{ vars.PROPERTY_MANAGEMENT_ETL_WORKSPACE_PATH }}/src" --overwrite
+      - name: Deploy bundle
+        run: databricks bundle deploy -t prod
