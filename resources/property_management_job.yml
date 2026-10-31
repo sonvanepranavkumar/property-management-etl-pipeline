@@ -1,0 +1,43 @@
+resources:
+  jobs:
+    property_management_etl:
+      name: property-management-etl
+
+      tasks:
+        - task_key: properties
+          notebook_task:
+            notebook_path: ../01_properties_etl.ipynb
+            source: WORKSPACE
+          existing_cluster_id: ${var.cluster_id}
+
+        - task_key: tenants
+          depends_on:
+            - task_key: properties
+          notebook_task:
+            notebook_path: ../02_tenants_etl.ipynb
+            source: WORKSPACE
+          existing_cluster_id: ${var.cluster_id}
+
+        - task_key: rent_payments
+          depends_on:
+            - task_key: tenants
+          notebook_task:
+            notebook_path: ../03_rent_payments_etl.ipynb
+            source: WORKSPACE
+          existing_cluster_id: ${var.cluster_id}
+
+        - task_key: expenses
+          depends_on:
+            - task_key: rent_payments
+          notebook_task:
+            notebook_path: ../04_expenses_etl.ipynb
+            source: WORKSPACE
+          existing_cluster_id: ${var.cluster_id}
+
+        - task_key: analytics
+          depends_on:
+            - task_key: expenses
+          notebook_task:
+            notebook_path: ../05_property_management_analytics.ipynb
+            source: WORKSPACE
+          existing_cluster_id: ${var.cluster_id}
