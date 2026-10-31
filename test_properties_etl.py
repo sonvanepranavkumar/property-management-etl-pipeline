@@ -58,5 +58,3 @@ def test_properties_transform():
     assert properties_transformed_df.count() == 5, "record count failed"
 
     print("All properties transformation tests finished!")
-
-test_properties_transform()
