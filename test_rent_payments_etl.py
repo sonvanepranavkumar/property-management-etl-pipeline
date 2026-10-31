@@ -71,5 +71,3 @@ def test_rent_payments_transform():
     assert rent_payments_transformed_df.count() == 5, "Record count failed"
 
     print("All rent payments transformation tests finished!")
-
-test_rent_payments_transform()

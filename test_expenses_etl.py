@@ -67,5 +67,3 @@ def test_expenses_transform():
     assert expenses_transformed_df.count() == 5, "record count failed"
 
     print("All expenses transformation tests finished!")
-
-test_expenses_transform()

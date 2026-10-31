@@ -69,5 +69,3 @@ def test_tenants_transform():
     assert tenants_transformed_df.count() == 5, "Record count failed"
 
     print("All tenants transformation tests finished!")
-
-test_tenants_transform()
