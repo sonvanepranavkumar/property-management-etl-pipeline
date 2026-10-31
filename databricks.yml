@@ -1,0 +1,19 @@
+bundle:
+  name: property-management-etl
+
+variables:
+  workspace_host:
+    description: Databricks workspace URL
+
+  cluster_id:
+    description: Existing Databricks cluster ID
+
+workspace:
+  host: ${var.workspace_host}
+
+targets:
+  prod:
+    mode: production
+    default: true
+    workspace:
+      root_path: /Workspace/Shared/.bundle/${bundle.name}/${bundle.target}
