@@ -55,6 +55,21 @@ jobs:
       - name: Install Databricks CLI
         uses: databricks/setup-cli@main
 
+      - name: Check credentials
+        run: |
+          if [ -z "$DATABRICKS_HOST" ]; then
+            echo "DATABRICKS_HOST is missing"
+            exit 1
+          fi
+          if [ -z "$DATABRICKS_TOKEN" ]; then
+            echo "DATABRICKS_TOKEN is missing"
+            exit 1
+          fi
+          echo "Both credentials are present"
+
+      - name: Test Databricks authentication
+        run: databricks current-user me
+
       - name: Validate bundle
         run: databricks bundle validate -t prod
 
