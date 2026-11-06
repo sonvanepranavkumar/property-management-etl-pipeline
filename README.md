@@ -75,12 +75,6 @@ Invalid records are separated from clean records with rejection reasons captured
 
 Unit tests are written with pytest and check data type conversions, trimming, standardisation and null handling for each dataset.
 
-Run the tests locally with:
-
-```
-pytest -v
-```
-
 Tests run automatically through GitHub Actions on every push and pull request to `main`.
 
 ## Analytics
