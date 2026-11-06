@@ -38,15 +38,6 @@ An end to end data engineering project built using Python, PySpark, Databricks, 
 - **Gold Layer (analytics tables):** Stores analytics ready datasets for property management reporting
 - **Power BI:** Visualises data quality metrics
 
-## Project Structure
-
-- `notebooks/` – Databricks notebooks for each ETL stage and Gold layer analytics
-- `src/` – Transformation and validation logic for each dataset
-- `property_management.py` – Shared functions for extraction, MERGE upserts and ETL summaries
-- `tests/` – pytest unit tests
-- `resources/` – Databricks Job definition
-- `.github/workflows/` – GitHub Actions CI workflow
-
 ## Getting Started
 
 ### Prerequisites
